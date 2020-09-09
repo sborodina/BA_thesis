@@ -1,0 +1,617 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath, amssymb, fullpage, graphics}
+\usepackage{caption, graphicx, fancyhdr, fancybox}
+\usepackage[cp1251]{inputenc}
+\usepackage[english, russian]{babel}
+\usepackage{color}
+
+%\newcommand{\bA}{\mathbf{A}}
+
+\footskip=15mm \textwidth=160mm \textheight=245mm
+
+\renewcommand\baselinestretch{1.12}
+
+\begin{document}
+
+%\thispagestyle{empty}
+\setcounter{page}{2}
+\setcounter{secnumdepth}{3}
+
+\newpage
+\renewcommand{\contentsname}{Содержание} 
+\tableofcontents
+
+\newpage
+
+\begin{center}
+{\sf РАСПРОСТРАНЕНИЕ НЕЛИНЕЙНЫХ ИОННО-ЗВУКОВЫХ ВОЛН \\ И ФОРМИРОВАНИЕ ДИСПЕРСИОННЫХ РАЗРЫВОВ \\ 
+В БЕССТОЛКНОВИТЕЛЬНОЙ ПЛАЗМЕ}
+\end{center}
+
+\section{Введение}
+Исследования нелинейных нестационарных течений разреженной плазмы представляет существенный теоретический и практический интерес \cite{David72, LP-02}. Эти исследования важны в задачах моделирования обтекания Земли, планет и других естественных или искусственных тел космической плазмой. Бесстолкновительная плазма является особой средой, для описания которой существенно необходимой становится кинетическая теория. Ввиду отсутствия столкновительной диссипации на первый план выходят дисперсионные эффекты и тонкие механизмы бесстолкновительной диссипации, что приводит разнообразным волновым конфигурациям и физическим явлениям \cite{Gur-Pit}. В кинетической теории отсутствие соударений функции распределения электронов и ионов описываются бесстолкновительным уравнением Больцмана, которые вместе с уравнениями Максвелла для поля составляют весьма сложную систему. Однако в ряде случаев модель можно упростить. В частности, широкое применение получили уравнения распространения ионно-звуковых волн в плазме без магнитного поля \cite{Karpman} и кинетическое уравнение квазинейтральной бесстолкновительно плазмы \cite{Gur-Pit}. Отметим, что переход к пределу квазинейтральной плазмы имеет принципиальное значение и соответствует переходу к невязкой (идеальной) жидкости в гидродинамике. 
+
+В дипломной работе основное внимание уделяется построению редукций и дифференциальных аппроксимаций кинетического уравнения квазинейтральной бесстолкновительно плазмы, а также сравнению результатов численного моделирования волновых возмущений на основе этих моделей. Выполненные исследования существенно опираются на работу \cite{Khe-11}, где исследованы свойства нелинейного кинетического уравнения. В частности, сформулированы условия обобщенной гиперболичности модели, построены классы точных решений, предложена ``многослойная'' аппроксимация системой дифференциальных законов сохранения и выполнено численное моделирование распространения волн. Проведенные в дипломной работе расчеты плазменных волн, возникающих в результате распада начального разрыва в рамках дифференциальных редукций и аппроксимаций  позволяют оценить степень детализации используемых уравнений по сравнению с исходной кинетической моделью. 
+
+Другая часть дипломной работы связана с рассмотрением дисперсионной модели ионно-звуковых волн \cite{Gur-Pit, El-05}. Отметим, что эта модель при отсутствии дисперсии сводится уравнениям холодной плазмы, которые возникают из кинетического уравнения квазинейтральной плазмы в рамках дельта-функционального анзаца. Для дисперсионной модели выписано решение линеаризованных уравнений и предложен численный алгоритм решения, основанный на расщеплении, которое состоит в последовательном решении гиперболической подсистемы и обращении положительно определенного эллиптического оператора. Аналогичных подход применялся в \cite{LeM10, Gavr16} для интегрирования дисперсионных уравнений распространения волн на поверхности идеальной жидкости. 
+
+\section{Математическая модель}
+
+При моделировании течений плазмы квазинейтральное приближение является аналогом теории длинных волн. Такое приближение применяется при рассмотрении движений с характерными размерами, существенно превышающими дебаевский радиус $R_D$. Параметр $R_D$ определяет максимальный масштаб разделения зарядов в плазме: при больших по сравнению с величиной $R_D$ смещениях электронов движение частиц под действием электрического поля приводит к быстрому восстановлению нейтральности. В одномерном случае в отсутствие магнитного поля уравнение движения квазинейтральной бесстолкновительной плазмы имеет вид \cite{Gur-Pit}
+\begin{equation}\label{eq:vlasov}
+ \frac{\partial f^1}{\partial t} + u\frac{\partial f^1}{\partial x} + \frac{e}{M_i}\frac{\partial \varphi}{\partial x}\frac{\partial f^1}{\partial u} = 0,  \qquad
+ \varphi = \frac{T_e}{e} \ln  \left( {\frac{1}{N_0} \int\limits_{-\infty}^{\infty}f^1 du}\right) 
+\end{equation}
+Здесь $ f^1(t,x,u) $ --- функция распределения ионов; $ x,  t $ --- пространственная координата и время $ \varphi(t, x) $ --- потенциал электрического поля; $ u,  M_i $ --- скорость и масса ионов; $ e,  T_e $ --- заряд и температура электронов; $ N_0 $ --- плотность невозмущенной плазмы. Величины $ M_i, e, T_e, N_0 $ --- заданные положительные постоянные. В работе \cite{Gur-Pit} исследованы автомодельные движения квазинейтральной разреженной плазмы, изучено явление ускорения ионов при свободном расширении плазмы и установлена возможность кинетического опрокидывания функции распределения для решений типа простых волн и волн гидродинамического типа. 
+
+Следуя \cite{Khe-11} рассмотрим решения уравнения \eqref{eq:vlasov} в классе кусочно-непрерывных по переменной $u$ функций с ограниченным носителем
+\begin{equation}\label{eq:f1}
+f^1(t, x, u) = f(t, x, u)[\theta(u - v_0(t,x)) - \theta(u - v_1(t,x))],
+\end{equation}
+где $ \theta $ --- функция Хевисайда, $ v_0(t,x), v_1(t,x)$ --- границы интервала по переменной u, вне которого функция распределения $ f^1(t, x, u) $ тождественно равна нулю; $ f(t, x, u) $ --- положительная, непрерывно дифференцируемая функция на множестве \[ \left\lbrace  (t, x, u): t \geqslant 0, x \in R, u \geqslant [v_0, v_1]  \right\rbrace   \] функция. Подставим представление решения \eqref{eq:f1} в кинетическое уравнение \eqref{eq:vlasov}.
+Обозначим 
+\[ 
+\begin{array}{l}\displaystyle
+\rho= \int\limits_{v_0}^{v_1}f du, \quad
+b = \frac{T_e}{M_i}.
+\end{array}
+\] Тогда
+\[
+\varphi = \frac{T_e}{e} \ln  \left( {\frac{1}{N_0} \rho}\right), \quad
+\frac{e}{M_i}\varphi_x = b \frac{\rho_x}{\rho}.
+\]
+Подставляя функцию $ f^1 $ в уравнение \eqref{eq:vlasov} получим
+\[
+0 = \left( f_t + u f_x - b \frac{\rho_x}{\rho} f_u\right) (\theta_0 - \theta_1) +\]  
+\[
++ f(t,x,u) \left(  -v_{0t} \delta(u - v_0) - u v_{0x} \delta(u - v_0) +  b \frac{\rho_x}{\rho} \delta(u - v_0)\right) + 
+\]  
+\[
++f(t,x,u) \left(  v_{1t} \delta(u - v_1) + u v_{1x} \delta(u - v_1) - b \frac{\rho_x}{\rho} \delta(u - v_1)\right)=
+\]
+\[ = \left( f_t + u f_x - b \frac{\rho_x}{\rho} f_u\right) (\theta_0 - \theta_1) - \] 
+\[ - f|_{ u = v_0} \left( v_{0t} + u v_{0x} - b \frac{\rho_x}{\rho}\right)  \delta(u - v_0) + \] \[+ f|_{u = v_1} \left( v_{1t} + u v_{1x} + b \frac{\rho_x}{\rho}\right) \delta(u - v_1) = 0 \]
+где $ \theta'(u - v_i) = \delta(u - v_i), \quad (i = 1,2)$ --- дельта функция Дирака.
+Тогда система \eqref{eq:vlasov} примет вид
+\begin{equation} \label{eq:kin}
+\begin{array}{l} \displaystyle
+\frac{\partial f}{\partial t} + u \frac{\partial f}{\partial x} - \frac{b}{\rho}\frac{\partial \rho}{\partial x} \frac{\partial f}{ \partial u} = 0, \qquad \rho= \int\limits_{v_0}^{v_1}f du,
+\\[3mm]\displaystyle
+\frac{\partial v_0}{\partial t} + v_0\frac{\partial v_0}{\partial x} + \frac{b}{\rho}\frac{\partial \rho}{\partial x} = 0, \qquad \frac{\partial v_1}{\partial t} + v_1\frac{\partial v_1}{\partial x} + \frac{b}{\rho}\frac{\partial \rho}{\partial x} = 0.
+\end{array}
+\end{equation}
+Таким образом, получили интегродифференциальную систему уравнений для определения величин $ f(t, x, u),  v_0(t, x) $ и $ v_1(t, x). $
+
+\subsection{Полулагранжева формулировка}
+Для исследования свойств кинетической модели \eqref{eq:kin} используем полулагранжевы переменные $ x, \lambda $, переход к которым осуществляется с помощью замены переменных~\cite{Zakh80} 
+\[
+u = u (t,x,\lambda), \qquad \overline{f}(t,x,\lambda) = f(t,x,u(t,x,\lambda)), \qquad \lambda\in [0,1] 
+\]
+где функция $ u(t, x, \lambda) $ ---  решение задачи Коши
+\[
+u_t + u u_x = - b \frac{\rho_x}{\rho}, \qquad u|_{t = 0 } = u^0(x, \lambda).
+\]
+Предполагается выполненным неравенство $ u_\lambda> 0  $ обеспечивающее обратимость замены переменных. При $ \lambda = 0 $ и $ \lambda = 1 $ функция  $ u(t,x, \lambda) $ принимает значения $ v_0(t,x) $ и $ v_1(t,x) $ соответственно. В результате для определения новых искомых величин $ u(t,x,\lambda) $ и $ H(t,x,\lambda) = u_\lambda \overline{f}$ получаем интегро-дифференциальную систему уравнений:
+\begin{equation}\label{eq:lag}
+u_t + u u_x + \frac{b}{\rho} \int\limits_{0}^{1} H_x d\lambda = 0, \qquad H_t + (uH)_x = 0, \qquad \rho = \int\limits_{0}^{1} H d\lambda
+\end{equation}
+Приведем детали получения системы \eqref{eq:lag}. Учитывая, что 
+\[
+\overline{f}_t = f_t + u_t f_u, \quad \overline{f}_x = f_x + u_x f_u, \quad \overline{f}_\lambda = u_\lambda f_u
+\]
+имеет место следующее выражение:
+\[
+\overline{f_t} + u \overline{f_x} = f_t + u f_x + (u_t + u u_x)f_u = f_t + u f_x - b \frac{\rho_x}{\rho} f_u = 0.
+\]
+Можем расписать второе уравнение системы \eqref{eq:kin}
+\[
+\rho = \int\limits_{v_0}^{v_1} f du = \int\limits_{0}^{1} \overline{f} u_\lambda d\lambda = \int\limits_{0}^{1} H d\lambda 
+\]
+Ввиду этого справедливо и первое уравнение системы.
+Подставим  $ H(t,x,\lambda) = u_\lambda \overline{f}$  во второе уравнение системы (4):
+\[
+(u_\lambda \overline{f})_t + (u u_\lambda \overline{f})_x = u_{\lambda t} \overline{f} + u_\lambda \overline{f}_t + (u u_\lambda)_x \overline{f} + (u u_\lambda) \overline{f}_x = 
+\]
+\[
+= u_\lambda(\overline{f}_t + u \overline{f}_x)  + \overline{f}(u_{\lambda t} + (u u_\lambda)_x)) = \overline{f}(u_{\lambda t} + u_x u_\lambda + u u_{\lambda x}) = 
+\] 
+\[
+= \overline{f}\left( (u_t + u u_x)_\lambda\right) = (- b \frac{\rho_x}{\rho})_\lambda \overline{f} = 0
+\]
+Таким образом $ H_t + (uH)_x = 0 $ эквивалентно представлению $ \overline{f}_t + u\overline{f}_x = 0 $ при выполненном первом уравнении системы \eqref{eq:lag}. 
+
+\subsection{Гидродинамическая формулировка}
+Еще одна интерпретация уравнений \eqref{eq:kin} связана с моделированием плоскопараллельного сдвигового течения идеальной жидкости в длинном канале с упругой стенкой~\cite{Ch01}
+\begin{equation}\label{eq:hydro}
+u_t + u u_x + v u_y +  (p(h))_x =0,\qquad h_t + \left( \int\limits_{0}^{h} u dy\right) _x = 0, \quad v = - \int\limits_{0}^{y} u_x dy.
+\end{equation}
+Здесь $ u(t,x,y), \quad v(t,x,y) $ --- горизонтальная и вертикальная компоненты вектора скорости; уравнениями $ y = 0 $ и $ y = h(t,x) $ задаются стенки канала, замыкающее соотношение $ p = p(h) $ определяет упругие свойства верхней стенки. В гемодинамике~\cite{pedly} используются различные варианты замыкания, в том числе зависимость вида 
+\[ p(h)= b \ln h + p_0. \]
+В этом случае уравнения \eqref{eq:hydro} эквивалентны системе \eqref{eq:lag} или \eqref{eq:kin}. 
+
+Сделаем замену переменных
+\[
+\widehat{u}(t,x,\lambda) = u(t,x, \Phi(t,x,\lambda)), \qquad 
+\widehat{v}(t,x,\lambda) = v(t,x, \Phi(t,x,\lambda)),
+\]
+\[
+y = \Phi(t,x,\lambda), \quad H = \Phi_\lambda, 
+\]
+где функция $\Phi$ --- решение задачи Коши
+\begin{equation}\label{eq:cond}
+\begin{cases}
+\displaystyle
+\frac{\partial\Phi}{\partial t} + u(t, x, \Phi) \frac{\partial\Phi}{\partial x} = v(t, x, \Phi)
+\\ 
+\Phi|_{t = 0} =  \lambda h_0(x). 
+\end{cases}
+\end{equation}
+Тогда 
+\[
+\frac{\partial \widehat{u}}{\partial t} = u_t + u_y \Phi_t; \qquad
+\frac{\partial \widehat{u}}{\partial x} = u_x + u_y \Phi_x; \qquad
+\frac{\partial \widehat{u}}{\partial \lambda} = u_y \Phi_\lambda. 
+\]
+Принимая во внимание вид функции $p(h)$, имеем
+\[ p_x = p'(h) h_x= \frac{b}{h}  h_x, \quad h=\int\limits_0^1 H d\lambda. \]
+Выразим $ u_t,  u_x $ и подставим в первое уравнение системы \eqref{eq:hydro}:
+\[
+\widehat{u}_t - u_y \Phi_t + \widehat{u}(\widehat{u}_x - u_y \Phi_x) + \widehat{v} u_y + p_x = \widehat{u}_t - \widehat{u}\widehat{u}_x - u_y(\Phi_t + u \Phi_x - \widehat{v}) + p_x = 0. \]
+Таким образом получим эквивалентное первому уравнению системы  \eqref{eq:lag} выражение \[ \widehat{u}_t - \widehat{u}\widehat{u}_x + \frac{b}{h} \int\limits_0^1 H_x d\lambda = 0, \quad h = \int\limits_0^1 H d\lambda.\displaystyle \]
+Продифференцируем первое уравнение системы \eqref{eq:cond} по $ \lambda $ 
+\[
+\Phi_{\lambda t} + u \Phi_{\lambda x} + u_y \Phi_\lambda \Phi_x = v_y \Phi_\lambda
+\]
+Знаем, что $ \Phi_\lambda = H $ и $ v = - \int\limits_0^y u_x dy, \quad v_y = - u_x. $
+\\* Тогда
+\[
+\begin{array}{l}
+\displaystyle
+H_t + u H_x + u_y \Phi_\lambda \Phi_x + u_x \Phi_\lambda = 0; \\ [2mm] \displaystyle
+H_t + u H_x + (u_y \Phi_\lambda + u_x)H = H_t + \widehat{u} H_x + \widehat{u}_x H =0; \\ [2mm] \displaystyle
+H_t + (\widehat{u} H)_x = 0.
+\end{array}
+\]
+Это эквивалентно второму уравнению системы \eqref{eq:lag}. Т.е. получили еще одну интерпретацию уравнений исходной системы \eqref{eq:kin}, относящуюся к моделированию сдвиговых течений идеальной жидкости.
+
+\section{Дифференциальные приближения и редукции}
+В процессе эволюции гладкого решения обобщенно-гиперболичской системы интегро-дифференциальных уравнений может возникнуть градиентная катастрофа. Дальнейшее описание решения возможно в классе разрывных функций, что приводит к необходимости формулировки модели в виде законов сохранения. Аналогично \cite{math2004} используем следующую консервативную формулировку \eqref{eq:lag}:
+\begin{equation}
+\begin{array}{l}\label{eq:conserv}
+u_{\lambda t} + (u u_\lambda)_x = 0, \qquad H_t + (u H)_x = 0,\\[2mm]\displaystyle
+A_{1 t} + (A_2 + b \rho)_x = 0, \qquad A_l = \int\limits_0^1 u^l H d\lambda  \qquad(l = 1, 2)
+\end{array} 
+\end{equation}
+Покажем эквивалентность систем \eqref{eq:conserv} и \eqref{eq:lag}. Для этого проинтегрируем по $ \lambda $ второе уравнение \eqref{eq:lag}:
+\[
+0 = \int\limits_0^1 H_t + (u H)_x d\lambda = \left( \int\limits_0^1 H d\lambda\right) _t + \left( \int\limits_0^1 u H d\lambda\right)_x = \rho_t + A_{1t}
+\]
+Что в точности совпадает со вторым уравнением системы \eqref{eq:conserv}.
+Теперь домножим второе уравнение из (4) на $ u $ и проинтегрируем по $ \lambda $:
+\[
+0 = \int\limits_0^1 u H_t + u(u H)_x d\lambda = \left( \int\limits_0^1 u H d\lambda \right)_t - \int\limits_0^1 H u_t d\lambda + \left( \int\limits_0^1 u^2 H d\lambda \right)_x  - \int\limits_0^1 u H u_x d\lambda =  
+\]
+\[
+= A_{1t} + A_{2x} - \int\limits_0^1 H(u_t + u u_x) d\lambda = A_{1t} + A_{2x} + \frac{b}{\rho} \rho_x \int\limits_0^1H d\lambda = A_{1t} + A_{2x} + \frac{b}{\rho} \rho_x \rho =  
+\]
+\[
+= A_{1t} + A_{2x} + b \rho_x = A_{1t} + (A_2 + b\rho)_x = 0.
+\]
+Это в точности третье уравнение системы \eqref{eq:conserv}.
+Теперь продифференцируем по $ \lambda $ первое уравнение:
+\[
+u_{t \lambda} + (u u_x)_\lambda + \left( \frac{b}{\rho} \int\limits_0^1H_x d\lambda  \right)_\lambda = 0,
+\]
+\[
+u_{t \lambda} + (u u_x)_\lambda = u_{t \lambda} + (u_\lambda u_x + u u_{x \lambda}) = u_{t \lambda} + (u u_\lambda)_x = 0.
+\]
+Таким образом показали эквивалентность уравнений \eqref{eq:lag} и \eqref{eq:conserv}. 
+
+\subsection{Многослойная аппроксимация}
+Для вывода дифференциальных законов сохранения , аппроксимирующих  интегро-дифференциальную модель \eqref{eq:conserv}, сделаем разбиение по переменной $ \lambda $ $ (0 = \lambda_0 < \lambda_1 < ... < \lambda_M = 1) $  и используем кусочно-постоянную аппроксимацию функции распределения 
+\[
+f(t, x, u) = f_{ci}(t, x), \qquad u\in[u_{i-1}, u_i]
+\]
+при осреднении уравнений \eqref{eq:conserv} по $ \lambda $. Здесь $ u_i(t, x) = u(t, x, \lambda_i), i = 1,..., M. $ В силу выбранной аппроксимации функции распределения и с учетом того, что 
+\[ H = u_\lambda \overline{f}(t, x, \lambda), Hd\lambda = f du \] имеют место равенства 
+\begin{equation}\label{eq:helpeqq}
+\int\limits_{\lambda_i-1} ^ {\lambda_i} H d\lambda = f_{ci}h_i, \qquad \int\limits_{\lambda_i-1} ^ {\lambda_i} uH d\lambda = u_{ci} f_{ci} h_i, \qquad \int\limits_{\lambda_i-1} ^ {\lambda_i} u^2 H d\lambda = u^2_{ci}f_{ci} h_i + \frac{f_{ci}h^3_i}{12}
+\end{equation}
+где $ h_i = u_i - u_{i-1}; \qquad u_{ci} = (u_i + u_{i-1})/2. $ Проинтегрируем уравнения \eqref{eq:conserv} по лагранжевой переменной $ \lambda $ от $ \lambda_i-1 $ до $ \lambda_i $. Используя формулы \eqref{eq:helpeqq}, получаем систему законов сохранения, состоящую из 2М + 1 дифференциальных уравнений для определения искомых функций $ h_i(t, x), f_{ci}(t, x) $ и $ A_1(t,x): $
+\begin{equation}\label{eq:multyapp}
+\begin{array}{l}\displaystyle
+\frac{\partial h_i}{\partial t} + \frac{\partial}{\partial x}(u_{ci} h_i) = 0, \quad \frac{\partial}{\partial t}(f_{ci}h_i) + \frac{\partial}{\partial x}(u_{ci}f_{ci}h_i) = 0, \\ [2mm]\displaystyle
+\frac{\partial A_1}{\partial t} + \frac{\partial}{\partial x} \left( \sum_{i = 1}^M (u^2_{ci} f_{ci}h_i + \frac{f_{ci}h^3_i}{12} +b f_{ci} h_i)\right) =0. 
+\end{array}
+\end{equation}
+Входящие в \eqref{eq:multyapp} величины $ u_{ci}(t, x) $ задаются формулами 
+\[
+u_{ci} = \frac{h_i}{2} + \sum_{k = 1}^{i-1}h_k + u_0, \quad u_0 = \left( \sum_{i = 1}^
+{M} f_{ci} h_i\right) ^ {-1} \left( A_1 - \sum_{i = 1}^{M} \frac{f_{ci} h_i ^ 2}{2} - \sum_{i = 2}^{M} f_{ci} h_i\sum_{k = 1}^{i-1} h_k\right).
+\]
+Для численного решения гиперболической системы дифференциальных законов сохранения \eqref{eq:multyapp}, в отличие  от интегро-дифференциальных уравнений \eqref{eq:conserv}, применимы стандартные численные методы. 
+
+\subsection{Газодинамическая аналогия}
+Предложенная для численного моделирования плазменных волн система дифференциальных законов сохранения \eqref{eq:multyapp} при $M = 1$ приводится к уравнениям газодинамического типа 
+\begin{equation}\label{eq:oneapp}
+\begin{array}{l}\displaystyle
+(\rho / f)_t + (v \rho / f)_ x = 0, \quad \rho_t + (v \rho)_x = 0, \\[2mm]\displaystyle
+(v \rho)_t + (v^2 \rho + p)_x = 0, \quad p(\rho, f) = \rho^3 / (12 f^2) + b \rho,
+\end{array}
+\end{equation}
+где $ \rho = h_1 f_{c1}; \quad v = u_{c1}; \quad f = f_{c1}. $ Известные гидродинамические пределы кинетического уравнения \eqref{eq:vlasov} получаются как частные случаи системы \eqref{eq:oneapp}. При $ f = f_0 = {\rm const} $ уравнения \eqref{eq:oneapp} совпадают с исходной моделью \eqref{eq:vlasov} на классе решений типа ступеньки $ f^1(t, x, u) = (\theta(u - v_0) - \theta(u - v_1))f_0. $ 
+
+\subsection{Модель холодной плазмы}
+ Если в системе \eqref{eq:oneapp} принять $ f = {\rm const} $ и пренебречь первым слагаемым в уравнении состояния $ p = p(\rho, f) $, то получим модель холодной плазмы \cite{Gur-Pit}
+\begin{equation}\label{eq:coldplasma}
+\rho_t + (v \rho)_x = 0, \quad (v \rho)_t + (v^2 \rho + b \rho)_x =0,
+\end{equation}
+которая также следует из уравнения (1) в случае $ f^1(t, x, u) = \rho(t, x) \delta(u - v(t, x)) $ (далее обозначим $ \delta(u - v(t, x)) = \delta $)
+\[
+\begin{cases}
+\displaystyle
+\frac{\partial f^1}{\partial t} = \frac{\partial \rho}{\partial t} \delta - \frac{\partial v}{\partial t} \rho \delta'; 
+\\[2mm]
+\displaystyle \frac{\partial f^1}{\partial x} = \rho_x \delta - v_x \rho \delta';  
+\\[2mm]
+\displaystyle \frac{\partial f^1}{\partial u} = \rho \delta'. 
+\end{cases}
+\]
+Так как  
+\[
+\int\limits_{-\infty}^{\infty}f^1 du = (\delta, \rho) = \rho (\delta, 1) = \rho,
+\]
+то в силу второго уравнения \eqref{eq:vlasov} имеем $ \displaystyle \varphi = \frac{T_e}{e} \ln \left( \rho / N_0\right). $
+При подстановке в \eqref{eq:vlasov} получим следующее соотношение:
+\[
+(\rho_t + u \rho_x)\delta - (v_t + u v_x + b \frac{\rho_x}{\rho}) \rho \delta' = 0; \eqno(\star)
+\]
+Ввиду известных свойств дельта функции Дирака:
+\[
+\begin{array}{l} \displaystyle
+1) \quad(\delta'(u-v), u) = -(\delta(u-v), 1);\\[2mm]\displaystyle
+2) \quad(\delta(u - v), u) = v
+\end{array}
+\]
+уравнение  $ (\star) $ примет вид:
+\[
+\rho_t + (v \rho)_x = 0
+\]
+Умножим $ (\star)$ на  $ u $
+\[
+\begin{array}{l}
+\displaystyle
+(\rho_t + u \rho_x)u \delta - (v_t + u v_x + b \frac{\rho_x}{\rho}) \rho u \delta' = 0; \\[2mm] \displaystyle
+(\rho_t + v \rho_x) v \delta + (v_t + b \frac{\rho_x}{\rho}) \rho \delta + 2 v v_x \rho \delta =
+\\[2mm] \displaystyle = \left( (\rho_t + (v \rho)_x\right))v  + (v_t + v v_x + b \frac{\rho_x}{\rho}) \rho =
+\\[2mm] \displaystyle = (v \rho)_t + (v^2 \rho + b \rho)_x = 0;
+\end{array}
+\]
+Таким образом $ \quad (v \rho)_t + (v^2 \rho + b \rho)_x = 0
+$ -- получено второе уравнение системы (10). 
+
+\subsubsection{Решение задачи Римана о распаде произвольного разрыва}\label{analyt}
+Построим решение уравнений холодной плазмы \eqref{eq:coldplasma} с кусочно-постоянными начальными данными 
+\begin{equation}\label{eq:condrim}
+\begin{array}{l}
+(u, \rho)\big|_{t = 0} = 
+\begin{cases}\displaystyle
+(u_1, \rho_1),\quad x < 0\\[2mm] \displaystyle
+(u_2, \rho_2), \quad x > 0
+\end{cases}
+\end{array}
+\end{equation}
+Уравнения \eqref{eq:coldplasma} являются гиперболической системой, скорости характеристик которой задаются формулами
+\[ \lambda_1=u + \sqrt{b}, \quad \lambda_2=u - \sqrt{b}. \]
+Инварианты Римана имеют вид
+\[
+r = u + \sqrt{b} \ln{\rho}, \quad l = u - \sqrt{b} \ln{\rho},
+\]
+и позволяют переписать систему \eqref{eq:coldplasma} в следующем эквивалентном виде (на гладких решениях)
+\[ \frac{\partial r}{\partial t} + \lambda_1 \frac{\partial r}{\partial x} = 0, \quad 
+   \frac{\partial l}{\partial t} + \lambda_2 \frac{\partial l}{\partial x} = 0. \]
+Уравнения \eqref{eq:coldplasma} и начальные условия \eqref{eq:condrim} инвариантны относительно растяжения $ t \rightarrow at, x \rightarrow ax $. Поэтому решение можно искать в виде $ u = u(\xi)$, $\rho = \rho(\xi)$, $\xi = x/t $ (или $ r = r(\xi)$, $l = l (\xi) $).
+
+Если $ r = r_0 = {\rm const}$, то $(\lambda_2 - \xi) l'(\xi)=0$. Следовательно, $\lambda_2 = \xi$, иначе  получаем постоянное решение. Аналогично, если $ l = l_0 = {\rm const}$, то $ (\lambda_1 - \xi) r'(\xi)=0$ и непостоянное решение возможно лишь при $\lambda_1 = \xi$.
+Определим уравнения $r$-волны ($ \rho \leq \rho_1 $)
+\[
+\begin{array}{l}
+\begin{cases}\displaystyle
+u + \sqrt{b} \ln{\rho} = u_1 + \sqrt{b} \ln{\rho_1},\\[2mm] \displaystyle
+u - \sqrt{b} = x/t,
+\end{cases}
+\end{array}
+\]
+и уравнения $l$-волны ($ \rho \leq \rho_2 $)
+\[
+\begin{array}{l}
+\begin{cases}\displaystyle
+u - \sqrt{b} \ln{\rho} = u_2 - \sqrt{b} \ln{\rho_2},\\[2mm] \displaystyle
+u + \sqrt{b} = x/t,
+\end{cases}
+\end{array}
+\]
+Ударная волна, направленная влево задается соотношением 
+\[ u = u_1 - (\rho - \rho_1)\sqrt{\dfrac{b}{\rho \rho_1}}, \quad \rho \geq \rho_1. \]
+Для ударной волны, направленной вправо, имеем 
+\[ u = u_2 + (\rho - \rho_2)\sqrt{\dfrac{b}{\rho \rho_2}}, \quad \rho \geq \rho_2.\]
+
+Совмещенная $(u, \rho)$-диаграмма простых и ударных волн изображена на рис.~\ref{ris:diagram}. Для построения были взяты следующие значения $ b = 1$, $u_1 = 0$, $\rho_1 = 1$, $u_2 = 0$, $\rho_2 = 2$. В рассмотренном примере переход к постоянному состоянию ``3'' ($u_3$, $\rho_3$ --- точка пересечение кривых, направленных влево и вправо) дается левой ударной и правой простой волнами. 
+
+Для решения задачи о распаде разрыва малой амплитуды можно воспользоваться $(u,\rho)$-диаграммой в линейном приближении. Тогда состояние ``3'' дается явными формулами
+\[
+\begin{array}{l}
+\begin{cases}\displaystyle
+\rho_3 = \frac{(u_1 - u_2 + 2 \sqrt{b}) \rho_1 \rho_2}{(\rho_1 + \rho_2)\sqrt{b}}\\[2mm] \displaystyle
+u_3 = \dfrac{\rho_1 u_1 + \rho_2 u_2 + \sqrt{b}(\rho_1 - \rho_2)}{\rho_1 + \rho_2}
+\end{cases}
+\end{array}
+\]
+Приведенный метод построения точного решения задачи о распаде произвольного разрыва для уравнений холодной плазмы будет использован ниже для верификации численных результатов.
+
+\begin{figure}
+\begin{minipage}[h!]{0.39\linewidth}
+\center{\includegraphics[width=0.8\linewidth]{diagram} \\ }
+\caption{Совмещенная диаграмма простых и ударных волн.}
+\label{ris:diagram}
+\end{minipage}
+\hfill
+\begin{minipage}[h!]{0.6\linewidth}
+\center{\includegraphics[width=0.9\linewidth]{distrib} \\ }
+\caption{Функция распределения $f(u)$.}
+	        \label{ris:distrib}
+\end{minipage}
+\end{figure}
+
+\section{Сравнение моделей}
+ \subsection{Многослойная аппроксимация}
+Выполним расчет о распаде произвольного разрыва на основе дифференциальной аппроксимации \eqref{eq:multyapp}. Пусть при $ t =0 $ свойства плазмы в полупространстве $ x < 0 $ определяются функцией распределения $ f_1(u) $, а в полупространстве $ x > 0 $ --- функцией распределения $ f_2(u) $. На интервале $ u \in (v_0, v_1) $ зададим функции $ f_1, f_2 $ следующим образом (рис.~\ref{ris:distrib}, кривые 1, 2):
+\[ f_1(u) = \frac{3 \exp(-u^2)}{4\sqrt{\pi} {\rm erf}(1)}, \quad 
+   f_2(u) = \frac{\exp(-4u^2)}{2 \sqrt{\pi} {\rm erf}(2)} \quad (v_1 = -v_0 = 1) \]
+Расчетный интервал по пространственной переменной $ x\in \left[ x_a, x_b \right] $ разбивается на $N$ равных ячеек. В центральных точках ячеек $ x_j$ ($j = 1,...,N$) при $t =0$ задаются начальные значения вектора искомых величин $ (h_1,...,h_M; f_{c1}h_1,...,f_{cM}h_M; A_1) $. Здесь $ h_i = (v_1 - v_0)/M; f_{ci} $ --- среднее значение функции $ f_1(u) (f_2(u)) $ на промежутке $ (u_{i-1}, u_i) $, где $ u_{i} = v_0 + ih_i$. В силу выбора начальной функции распределения $ A_1 = 0. $ Для всех значениях времени $t>0$ дополнительно задаются граничные условия в точках $ x_{1-i} $ и $ x_{N+i} \quad (i = 1,2)$. При этом использованы граничные условия вида $ u(x_{1-i}) = u(x_1), u(x_{N+i}) = u(x_N) $, которые позволяют проводить вычисления до тех пор, пока начальные возмущения не достигнут границ расчетной области. 
+
+Вычисления проводятся с использованием TVD схемы повышенного порядка аппроксимации типа предиктор-корректор \cite{NT90}. Параметр $b = 1$; границы расчетного интервала $ x_b = - x_a = -2 $. Расчеты выполнены при $N = 200$, $M = 100$. Сплошными линиями на рис.~\ref{ris:distrib} (кривые 3 и 4) показана функция распределения $f(u)$ при $t=1$ для значений $x=1$ и $x=-1.2$. Появление двух локальных максимумов функции распределение (кривая 4) соответствует кинетическому опрокидыванию \cite{Gur-Pit} и развитию неустойчивости \cite{St65}. На рис.~\ref{ris:sys1} показано распределение плотности плазмы $ \rho(t, x) $ при $ t = 0 $ (пунктирная линия) и $ t = 1 $ (сплошная линия).
+
+\begin{figure}
+\begin{minipage}{0.49\linewidth}
+\center{\includegraphics[width=1\linewidth]{sys1} \\ }
+\caption{Плотность плазмы $\rho$ при $t=0$ (пунктир) и $t=1$. Расчет по многослойной модели~\eqref{eq:multyapp}.}
+\label{ris:sys1}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+\center{\includegraphics[width=1\linewidth]{sys2} \\ }
+\caption{Плотность плазмы $\rho$ при $t=0$ (пунктир) и $t=1$. Расчет по газодинамической модели~\eqref{eq:oneapp}. }
+\label{ris:sys2}
+\end{minipage}
+\end{figure}
+
+\subsection{Газодинамическая аналогия}
+Приведем расчет задачи о распаде произвольного разрыва на основе уравнений \eqref{eq:oneapp}. Расчетный интервал по пространственной переменной $ x\in \left[ x_a, x_b \right]  $ разбивается на $N$ равных ячеек. В центральных точках ячеек $ x_j (j = 1,...,N) $ при $t =0$ задаются начальные 
+\[
+\begin{array}{l}\displaystyle
+(\rho, \rho / f, \rho v)|_{t = 0} =
+\begin{cases}
+(1/4, 2, 0), \quad x  < 0\\[2mm] \displaystyle
+(3/4, 2, 0), \quad x > 0,
+\end{cases}
+\end{array}
+\]
+соответствующие предыдущему примеру с учетом выбранной ``однослойной'' аппроксимации. Расчеты выполнены при $N = 200$. На рис.~\ref{ris:sys2} показано распределение плотности плазмы $ \rho(t, x) $ при $ t = 0 $ (пунктирная линия) и $ t = 1 $ (сплошная линия).
+ 
+\subsection{Модель холодной плазмы}
+Выполним аналогичный расчет на основе модели \eqref{eq:coldplasma}. Начальные значения вектора искомых величин следующие
+\[
+\begin{array}{l}\displaystyle
+(\rho, v \rho )\big|_{t = 0} =
+\begin{cases}
+(1/4, 0), \quad x  < 0\\[2mm] \displaystyle
+(3/4, 0), \quad x > 0.
+\end{cases}
+\end{array}
+\]
+Расчеты выполнены при $N = 250$. На рис.~\ref{ris:sys3} показано распределение плотности плазмы $ \rho(t, x) $ при $ t = 0 $ (пунктирная линия) и $ t = 1 $ (сплошная линия). Отметим хорошее совпадение численного решения с аналитическим (построенным по формулам из подраздела \eqref{analyt}). На рис.~\ref{ris:sys5} показано точное (красная линия) и численное (синяя линия) решения. 
+
+\begin{figure}
+\begin{minipage}{0.49\linewidth}
+\center{\includegraphics[width=1\linewidth]{sys3} \\ }
+\caption{Плотность плазмы $\rho$ при $t=0$ (пунктир) и $t=1$. Расчет по модели \eqref{eq:coldplasma}.}
+\label{ris:sys3}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+\center{\includegraphics[width=1\linewidth]{sys5} \\ }
+\caption{Сравнение численного и точного решений модели холодной плазмы \eqref{eq:coldplasma}. }
+\label{ris:sys5}
+\end{minipage}
+\end{figure}
+
+\subsection{Сравнение результатов расчета по моделям \eqref{eq:multyapp}, \eqref{eq:oneapp} и  \eqref{eq:coldplasma}}
+Сравним результаты расчета плазменных волн, возникающих в результате рассмотренного распада разрыва. Плотности плазмы при $t=1$, полученные с использованием уравнений \eqref{eq:multyapp}, \eqref{eq:oneapp} и \eqref{eq:coldplasma} показаны на рис.~\ref{ris:sys4}. Очевидно, что все три модели правильно описывают общие тенденции процесса, но с разной степенью детализации. Причем в области простой волны разрежения результаты по всем моделям близки. Скорость распространения сильного разрыва в рамках рассматриваемых моделей разная, более того, отличается и число разрывов (один для уравнений \eqref{eq:coldplasma} и два для системы \eqref{eq:oneapp}). В рамках равнений ``многослойно'' аппроксимации имеется $M$ контактных характеристик, поэтому один контактный разрыв, реализуемый для модели \eqref{eq:oneapp}, размазывается на $M$ разрывов малой амплитуды. Таким образом, можно сделать вывод, что приведенные модели одинаково описывают общую тенденцию течения, но для более детального моделирования следует использовать многослойную аппроксимацию \eqref{eq:multyapp}. 
+
+\begin{figure}[h!]
+\begin{center}
+\center{\includegraphics[width=120mm]{sys4}}
+{\caption{Плотность плазмы $ \rho $. Сравнение моделей \eqref{eq:multyapp}, \eqref{eq:oneapp} и  \eqref{eq:coldplasma}} \label{ris:sys4}}
+\end{center}
+\end{figure}
+
+\section{Формирование дисперсионных разрывов.}
+Рассмотрим дисперсионную модель ионно-звуковых волн \cite{Gur-Pit, El-05}
+\begin{equation}\label{eq:disp}
+\begin{array}{l}\displaystyle
+\begin{cases}
+\rho_t + (v \rho)_x = 0, \quad
+v_t + v v_x + b \varphi_x = 0,\\[2mm]\displaystyle
+\varepsilon \varphi_{xx} = e ^\varphi - \rho. 
+\end{cases}
+\end{array}
+\end{equation}
+которая сводится к \eqref{eq:coldplasma} при $ \varepsilon=0 $. Уравнения \eqref{eq:disp} допускают запись в эквивалентном виде 
+\begin{equation}\label{eq:linear}
+\begin{array}{l}\displaystyle
+\begin{cases}
+\rho_t + (v \rho)_x = 0, \\[2mm]\displaystyle
+(v \rho)_t + ( v^2 \rho + b e^\varphi - b/2 \varepsilon \varphi_x ^2)_x = 0,\\[2mm]\displaystyle
+\varepsilon \varphi_{xx} = e ^\varphi - \rho.
+\end{cases} 
+\end{array}
+\end{equation}
+Систему \eqref{eq:linear} можно решать методом расщепления, т.е. последовательным решении гиперболической подсистемы и обращении эллиптического оператора. На первом шаге решаем гиперболическую часть (первое, второе уравнения системы \eqref{eq:linear}) для нахождения $ \varphi $. На втором шаге уже с известным $ \varphi $ находим $ (v, \rho) $. Далее приводится численный алгоритм для решения третьего уравнения системы \eqref{eq:linear}. В разностном виде уравнение записывается следующим образом:
+\[
+\begin{array}{l} \displaystyle
+\varphi_{j-1}^{n+1} - 2\varphi_{j}^{n+1} + \varphi_{j+1}^{n+1} = -(\rho_{j}^{n+1} - \exp(\varphi_j ^ n)) \frac{h^2}{\varepsilon}, \quad (i = 1,...,N-1).
+\end{array}
+\]
+Или
+\[
+\begin{array}{l} \displaystyle
+a_j \varphi_{j-1} - c_j\varphi_j + b_j\varphi_{j+1} = - f_j, \quad a_j = b_j = 1, c_j = 2, f_j = (\rho_{j}^{n+1} - \exp(\varphi_j ^ n)) \frac{h^2}{\varepsilon},\\[2mm] \displaystyle
+\varphi_0 = \varkappa_1 \varphi_1 + \mu_1,..., \varphi_N = \varkappa_2 \varphi_{N-1} +\mu_2,\\[2mm] \displaystyle
+\vec{\varphi} = (\varphi_0, \varphi_1,...,\varphi_N), \vec{f} = (\mu_1, -f_1,.., -f_{N-1}, \mu_2).
+\end{array}
+\]
+Учитывая нелинейность уравнения, введем дополнительную переменную и воспользуемся методом установления: $\displaystyle \quad -\varepsilon\varphi_{xx\xi} + e^\varphi \varphi_\xi = \varepsilon\varphi_{xx} - e^\varphi + \rho, $
+\[
+\begin{array}{l}\displaystyle
+-\varepsilon\left( \frac{\varphi_{j-1}^{n} - 2\varphi_{j}^{n} + \varphi_{j+1}^{n}}{h^2} - \frac{\varphi_{j-1}^{n-1} - 2\varphi_{j}^{n-1} + \varphi_{j+1}^{n-1}}{h^2}\right)\frac{1}{\tau} + e^{\varphi_j ^{n-1}} \frac{\varphi_j^n - \varphi_j ^{n+1}}{\tau} =\\[2mm] \displaystyle 
+=\varepsilon \frac{\varphi_{j-1}^{n-1} - 2\varphi_{j}^{n-1} + \varphi_{j+1}^{n-1}}{h^2} - e^{\varphi_j ^{n-1}} + \rho_j,
+\end{array}
+\]
+тогда
+\[
+\begin{array}{l}\displaystyle 
+\varphi_{j-1} ^n - (2 + \frac{h^2}{\varepsilon} e ^ {\varphi_j ^{n-1}}) \varphi_j ^n =
+ \varphi_{j-1} ^{n-1} -(2 + \frac{h^2}{\varepsilon} e ^ {\varphi_j ^{n-1}})\varphi_{j} ^{n-1} + \\[2mm] \displaystyle 
++ \varphi_{j+1} ^{n+1} - (\varphi_{j-1}^{n-1} - 2\varphi_{j}^{n-1} + \varphi_{j+1}^{n-1})\tau + (e^{\varphi_j ^{n-1}} - \rho_j)\frac{h^2 \tau}{\varepsilon}.
+\end{array}
+\]
+\[
+\begin{array}{l}\displaystyle
+\begin{cases} \displaystyle
+a_j = b_j = 1, \quad c_j = 2 + \frac{h^2}{\varepsilon} e ^ {\varphi_j ^{n-1}};
+\\[2mm] \displaystyle 
+f_j = \varphi_{j-1} ^{n-1} -(2 + \frac{h^2}{\varepsilon} e ^ {\varphi_j ^{n-1}})\varphi_{j} ^{n-1} + \varphi_{j+1} ^{n+1} - (\varphi_{j-1}^{n-1} - 2\varphi_{j}^{n-1} + \varphi_{j+1}^{n-1})\tau + (e^{\varphi_j ^{n-1}} - \rho_j)\frac{h^2 \tau}{\varepsilon}.
+\end{cases}
+\end{array}
+\]
+Нахождение решения разностных схем
+\[
+\begin{array}{l}
+\begin{cases}\displaystyle
+a_j \varphi_{j-1} - c_j\varphi_j + b_j\varphi_{j+1} = - f_j, \quad (j = 1,...,N-1)\\[2mm] \displaystyle
+\varphi_0 = \varkappa_1 \varphi_1 + \mu_1,..., \varphi_N = \varkappa_2 \varphi_{N-1} +\mu_2,
+\end{cases}
+\end{array}
+\]
+где $ \displaystyle
+\vec{\varphi} = (\varphi_0, \varphi_1,...,\varphi_N)^T, \quad \vec{f} = (\mu_1, -f_1,.., -f_{N-1}, \mu_2)^T $
+сводится к решению системы $ A\varphi = f $, где матрица А есть 
+\[
+A = \begin{pmatrix}
+1 & -\varkappa_{1} & 0 & \cdots & 0 & 0 & 0 \\
+a_{1} & -c_1 & b_1 & \cdots & 0 & 0 & 0 \\         
+\vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots \\
+0 & 0 & 0 & \cdots & a_{N-1} & -c_{N-1} & b_{N-1} \\
+0 & 0 & 0 & \cdots & 0 & - \varkappa_2 & 1
+\end{pmatrix}
+\]
+Пусть $ \varphi_j = \alpha_{j + 1} \varphi_{j+1} + \beta_{j+1}, \quad (\varphi_{j-1} = \alpha_{j } \varphi_{j} + \beta_{j}) $, тогда
+\[
+\begin{array}{l}\displaystyle
+(a_j \alpha_j - c_j)\varphi_j + b_j\varphi_{j+1} = -(f_j + a_j\beta_j)\\[2mm]\displaystyle
+\varphi_j - \alpha_{j+1}\varphi_{j+1} = \beta_{j+1}.
+\end{array}
+\]
+Теперь можем найти соотношения для $ \alpha_{j+1}, \quad \beta_{j+1} $:
+\[
+\alpha_{j+1} = \dfrac{b_j}{c_j - a_j\alpha_j}, \quad \beta_{j+1} = \frac{f_j + a_j\beta_j}{c_j - a_j\alpha_j}. \quad (j = 1,..., N-1)
+\]
+На нулевом слое $ j = 0: \quad \varphi_0 = \alpha_1\varphi_1 +\beta_1= \varkappa_1\varphi_1 + \mu_1 $, соответственно $ \alpha_1 = \varkappa_1, \quad \beta_1 = \mu_1. $
+Значит 
+\[
+\begin{array}{l}
+\begin{cases}\displaystyle
+\varphi_{N-1} - \alpha_N \varphi_N = \beta_N,\\[2mm]\displaystyle
+\varkappa_2 \varphi_{N-1} - \varphi_N = -\mu_2.
+\end{cases}
+\end{array}
+\]
+ и $\displaystyle \varphi_N = \frac{\mu_2 + \varkappa_2\beta_N}{1 - \alpha_N \varkappa_2}. $
+Таким образом, найдено соотношение для $ \varphi_N $.
+
+\subsection{Модельный пример}
+В качестве модельного примера рассмотрим уравнение Benjamin-Bona-Mahony 
+\begin{equation}\label{eq:bbm}
+\displaystyle u_t + u u _x - u_{txx} = 0
+\end{equation}
+Перепишем \eqref{eq:bbm} в следующем эквивалентном виде 
+\begin{equation}\label{eq:bbm1}
+\begin{array}{l}\displaystyle
+K_t + \left( \dfrac{u^2}{2}\right) _x = 0, \quad K = u - u_{xx}.
+\end{array}
+\end{equation}
+Систему \eqref{eq:bbm1} можно решать описанным выше методом расщепления. Результаты расчета распада разрыва приведены на рис.~\eqref{ris:bbm}, иллюстрирующем формирование дисперсионных разрывов. 
+
+\begin{figure}
+\begin{center}
+\center{\includegraphics[width=160mm]{bbm}}
+\caption{} \label{ris:bbm}
+\end{center}
+\end{figure}
+
+\section{Заключение}
+
+В работе рассмотрены математические модели, описывающие распространение плазменных волн \cite{Gur-Pit}. Основное внимание уделяется кинетическому уравнению квазинейтральной бесстолкновительной плазмы \eqref{eq:kin}, построению редукций и дифференциальных аппроксимаций этого уравнения. При этом существенно используются результаты работы \cite{Khe-11}. Выполнено построение и сравнение численных решений уравнений распространения волн в плазме для трех различных моделей: многослойной аппроксимации \eqref{eq:multyapp}, газодинамических уравнений \eqref{eq:oneapp} и модели холодной плазмы \eqref{eq:coldplasma}. Показано, что все приведенные модели правильно отражают общую тенденцию процесса, но наиболее детальное моделирование, описывающее эффект кинетического опрокидывания волн, возможно лишь на основе уравнений многослойной аппроксимации. Другая часть работы связана с поиском подходов к численному моделированию дисперсионных разрывов для уравнений ионно-звуковых волн \cite{Gur-Pit, El-05}. Предложен один из возможных подходов к численному решению уравнений \eqref{eq:disp} и показана его эффективность на модельном примере \eqref{eq:bbm}.
+
+\begin{thebibliography}{99}
+
+\bibitem{David72} 
+Davidson R.\,C. \textit{Methods in nonlinear plasma theory}. New York (USA): Academic Press, 1972. 356~p.
+
+\bibitem{LP-02} 
+Лифшиц, Е.\,М., Питаевский, Л.\,П. \textit{Физическая кинетика.} М.: Физматлит, 2002. 536 с.
+
+\bibitem{Gur-Pit} 
+Гуревич А.\,В., Питаевский Л.\,П. \textit{Нелинейная динамика разреженной плазмы и ионосферная аэродинамика.} // Вопросы теории плазмы. М.: Атомиздат, 1980. Вып.\,10. С.\,3--87.
+
+\bibitem{Karpman}
+Карпман В.\,И. \textit{Нелинейные волны в диспергирующих средах.} М.: Наука, 1973.
+
+\bibitem{Khe-11}
+Хе А.\,К., Чесноков А.\,А. \textit{Распространение нелинейных возмущений в квазинейтральной бесстолкновительной плазме} // ПМФТ. 2011. Т.\,52 №\,5. С.\,3--16.
+
+\bibitem{LeM10}
+Le Metayer O., Gavrilyuk S., Hank S. \textit{A numerical scheme for the Green--Naghdi model} // J. Comput. Phys. 2010. V.\,229. P.\,2034--2045.
+
+\bibitem{Gavr16}
+Gavrilyuk S.\,L., Liapidevskii V.\,Yu., Chesnokov A.\,A. \textit{Spilling breakers in shallow water: applications to Favre waves and to the shoaling and breaking of solitary waves} // J. Fluid Mech. 2016. V.\,808. P.\,441--468.
+
+\bibitem{Zakh80} 
+Захаров В.\,Е. \textit{Уравнения Бенни и квазиклассическое приближение в методе обратной задачи} // Функцион. анализ и его прил. 1980. Т.\,14, вып.\,2. С.\,15--24.
+
+\bibitem{LT00} 
+Ляпидевский В.\,Ю. \textit{Математические модели распространения длинных волн в неоднородной жидкости.} / В.\,Ю. Ляпидевский, В.\,М. Тешуков. Новосибирск: Изд-во СО РАН, 2000.
+
+\bibitem{St65} 
+Стикс Т. \textit{Теория плазменных волн.} М.: Атомиздат, 1965.
+
+\bibitem{NT90} 
+Nessyahu H., Tadmor E. \textit{Non-oscillatory central differencing schemes for hyperbolic conservation laws} // J. Comp. Phys. 1990. V.\,87, N\,2. P.\,408--463.
+
+\bibitem{El-05} 
+El G.\,A., Khodorovskii V.\,V., Tyurina A.\,V. \textit{Undular bore transition in bi-directional conservative wave dynamics} // Physica D. 2005. V.\,206. P.\,232--251.
+
+\bibitem{math2004}
+Teshukov V., Russo G., Chesnokov A. \textit{Analytical and numerical solutions of the shallow water equations for 2D rotational flows} // Math. Models Methods Appl. Sci. 2004 V.\, 14. P.\, 1451--1481.
+
+\bibitem{Ch01} 
+Чесноков А.\,А. \textit{Осесимметричные вихревые движения жидкости в длинной эластичной трубке} // ПМТФ. 2001. Т.\,42, №\,4. С.\,76--87.
+
+\bibitem{pedly}
+Педли Т.\, \textit{Гидродинамика крупных кровеносных сосудов.} М.: Мир, 1983
+
+\end{thebibliography}
+
+\end{document}
